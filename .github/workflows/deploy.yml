@@ -1,0 +1,30 @@
+name: DockerPHP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Composer Update
+        working-directory: ./app
+        run: composer update
+
+      - name: Install Composer Dependencies
+        working-directory: ./app
+        run: composer install --prefer-dist
+
+      - name: Run Tests
+        working-directory: ./app/
+        run: ./vendor/bin/phpunit ./src/tests
+
+      - run: docker build --target app -t karuifeather/php-composer:1.0 -f ./php/Dockerfile .
+      - run: docker build -t karuifeather/nginx-php:1.0 -f ./nginx/Dockerfile .
+      - run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USERNAME}} --password-stdin
+      - run: docker push karuifeaher/php-composer:1.0
+      - run: docker push karuifeather/nginx-php:1.0
