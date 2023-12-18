@@ -26,5 +26,5 @@ jobs:
       - run: docker build --target app -t karuifeather/php-composer:1.0 -f ./php/Dockerfile .
       - run: docker build -t karuifeather/nginx-php:1.0 -f ./nginx/Dockerfile .
       - run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USERNAME}} --password-stdin
-      - run: docker push karuifeaher/php-composer:1.0
+      - run: docker push karuifeather/php-composer:1.0
       - run: docker push karuifeather/nginx-php:1.0
